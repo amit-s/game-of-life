@@ -1,0 +1,15 @@
+#board {
+  height: 110px;
+  width: 440px; }
+
+.cell {
+  background: rgba(100, 100, 100, 0.5);
+  width: 20px;
+  height: 20px;
+  margin: 1px; }
+
+#cellhold {
+  display: flex;
+  flex-wrap: wrap; }
+
+/*# sourceMappingURL=style.css.map */
