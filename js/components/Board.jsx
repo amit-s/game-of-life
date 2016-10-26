@@ -8,23 +8,36 @@ export default class Board extends React.Component{
 			cells: this.createCells(100),
 			rows: 5,
 			columns: 20,			
-		};		
+		};
 	}
 
 	createCells(count){
 		let cells=[];
 		for(let i=0; i<count; i++){
-			cells.push(i);
+			cells.push({
+				number: i,
+				isAlive: false
+			});
 		}
 		return cells;
 	}
 
-	findNeighbors(e){
-		let arr = [];
-		let neighbors = [];		
-		let cell = parseInt(e.target.dataset.cellId);
-		let totalCells = this.state.rows*this.state.columns;
+	cellLifeHandler(e){
+		let cellId = e.target.dataset.cellId-1;
+		let cells = this.state.cells;
 
+		cells[cellId].isAlive =  !cells[cellId].isAlive;
+		this.setState({cells});
+
+	}
+
+	findNeighbors(e){
+		this.cellLifeHandler(e);
+		let arr = [],
+		neighbors = [],
+		cell = parseInt(e.target.dataset.cellId),
+		totalCells = this.state.rows*this.state.columns;
+		
 		arr.push(cell);
 
 		if (((cell+1) % this.state.columns) === 1){
@@ -44,14 +57,13 @@ export default class Board extends React.Component{
 			neighbors.push(item-this.state.columns);
 			neighbors.push(item+this.state.columns);
 		});
-
 		
 		neighbors = neighbors.map((item)=>{
-				if(item===0){
-					return 100;
-				}else{
-					return ((totalCells+item) % totalCells);
-				}
+			if((item === 0) || ((totalCells+item) % totalCells) === 0){
+				return 100;
+			}else{
+				return ((totalCells+item) % totalCells);
+			}
 		});
 		console.log(neighbors);
 		neighbors.shift();
@@ -59,10 +71,15 @@ export default class Board extends React.Component{
 	}
 
 	render(){
-		
 		return(
-			<div id="cellhold">
-				{this.state.cells.map((cell,i)=><div data-cell-id={i+1} className="cell" onClick={(e)=>this.findNeighbors(e)} key={i+1}>{cell+1}</div>)}
+			<div>
+				<div id="cellcontainer">
+					{this.state.cells.map((cell,i)=>{
+						let cellClass = cell.isAlive ? "cell alive" : "cell dead";
+						return <div data-cell-id={i+1} className={cellClass} onClick={(e)=>this.findNeighbors(e)} key={i+1}>{cell.number+1}</div>;
+					})}
+				</div>
+				<button>Next Generation</button>
 			</div>
 			);
 	}

@@ -8,8 +8,14 @@
   height: 20px;
   margin: 1px; }
 
-#cellhold {
+#cellcontainer {
   display: flex;
   flex-wrap: wrap; }
+
+.alive {
+  background: red; }
+
+.dead {
+  background: rgba(100, 100, 100, 0.5); }
 
 /*# sourceMappingURL=style.css.map */

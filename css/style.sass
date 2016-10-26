@@ -1,13 +1,23 @@
+$background-color-live-cell: rgba(255,0,0,1)
+$background-color-dead-cell: rgba(100,100,100,0.5)
+
 #board	
 	height: 110px
 	width: 440px	
 
 .cell
-	background: rgba(100,100,100,0.5)
+	background: $background-color-dead-cell
 	width: 20px
 	height: 20px
 	margin: 1px
 
-#cellhold
+#cellcontainer
 	display: flex
 	flex-wrap: wrap
+
+.alive
+	background: $background-color-live-cell
+
+.dead
+	background: $background-color-dead-cell
+	
