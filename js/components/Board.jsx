@@ -3,12 +3,12 @@ import React from 'react';
 export default class Board extends React.Component{
 	constructor(props){
 		super(props);
-		let initialCells = this.createCells(100);
+		let initialCells = this.createCells(1000);
 
 		this.state = {
 			cells: initialCells,
-			rows: 5,
-			columns: 20,
+			rows: 25,
+			columns: 40,
 			generation: 0
 		};
 	}
@@ -25,9 +25,10 @@ export default class Board extends React.Component{
 	}
 
 	cellLifeHandler(e){
-		let cellId = e.target.dataset.cellId-1;
-		let cells = this.state.cells;
-
+		let cellId = e.target.dataset.cellId-1;		
+		/*console.log(this.findNeighbors(e.target.dataset.cellId-1));*/
+		/*this.findNeighbors(e.target.dataset.cellId-1)*/
+		let cells = this.state.cells.map((cell)=>Object.assign({},cell))
 		cells[cellId].isAlive =  !cells[cellId].isAlive;
 		this.setState({cells});
 	}
@@ -58,13 +59,30 @@ export default class Board extends React.Component{
 			neighbors.push(item+this.state.columns);
 		});
 		
+		/*neighbors = neighbors.map((item)=>{
+			if((item === 0) || ((totalCells+item) % totalCells) === 0){				
+				return totalCells;
+			}else{
+				return ((totalCells+item) % totalCells);
+			}
+		});*/
+
+		/*neighbors = neighbors.map((item)=>{
+			if(item === 0){				
+				return totalCells;
+			}else{
+				return item;
+			}
+		});*/
+
 		neighbors = neighbors.map((item)=>{
-			if((item === 0) || ((totalCells+item) % totalCells) === 0){
-				return 100;
+			if((item === 0) || (item === totalCells)){				
+				return totalCells;
 			}else{
 				return ((totalCells+item) % totalCells);
 			}
 		});
+
 		/*console.log(neighbors);*/
 		neighbors.shift();
 		return neighbors;
@@ -104,7 +122,7 @@ export default class Board extends React.Component{
 				<div id="cellcontainer">
 					{this.state.cells.map((cell,i)=>{
 						let cellClass = cell.isAlive ? "cell alive" : "cell dead";
-						return <div data-cell-id={i+1} className={cellClass} onClick={(e)=>this.cellLifeHandler(e)} key={i+1}>{cell.number+1}</div>;
+						return <div data-cell-id={i+1} className={cellClass} onClick={(e)=>this.cellLifeHandler(e)} key={i+1}></div>;
 					})}
 				</div>
 				<button onClick={()=>this.conwayRules()}>Next Generation</button>

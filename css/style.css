@@ -1,12 +1,14 @@
 #board {
-  height: 110px;
-  width: 440px; }
+  height: 550px;
+  width: 880px;
+  /*border: 1px solid black */ }
 
 .cell {
   background: rgba(100, 100, 100, 0.5);
   width: 20px;
   height: 20px;
-  margin: 1px; }
+  margin: 1px;
+  font-size: 0.7em; }
 
 #cellcontainer {
   display: flex;
