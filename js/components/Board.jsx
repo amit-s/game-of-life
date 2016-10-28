@@ -7,14 +7,17 @@ export default class Board extends React.Component{
 		let initialCells = this.createCells(1000);
 
 		this.state = {
-			cells: initialCells,			
-			rows: 25,
-			columns: 40,
-			height: 0,
-			width: 0,			
+			cells: initialCells,
+			board: {			
+				rows: 25,
+				columns: 40,
+				height: 0,
+				width: 0
+			},
 			game: {
 				isRunning: false,
-				currentGeneration: 0
+				currentGeneration: 0,
+				speed: 200
 			}
 		}
 	}
@@ -54,30 +57,38 @@ export default class Board extends React.Component{
 		this.setState({cells});
 	}
 
+	setGameSpeed(newspeed){
+		let speed = Number(newspeed);		
+		clearInterval(this.state.intervalId);
+		this.setState({game: Object.assign({}, this.state.game, {speed, isRunning: false})}, function(){			
+			this.startSim();			
+		});		
+	}
+
 	findNeighbors(index){
 		let arr = [],
 		neighbors = [],
 		cell = index+1,
-		totalCells = this.state.rows*this.state.columns;
+		totalCells = this.state.board.rows*this.state.board.columns;
 		
 		arr.push(cell);
 
-		if (((cell+1) % this.state.columns) === 1){
-			arr.push(cell + 1 - this.state.columns);
+		if (((cell+1) % this.state.board.columns) === 1){
+			arr.push(cell + 1 - this.state.board.columns);
 		}else{
 			arr.push(cell+1);
 		}
 
-		if(((cell-1)%this.state.columns) === 0){
-			arr.push(cell - 1 + this.state.columns);
+		if(((cell-1)%this.state.board.columns) === 0){
+			arr.push(cell - 1 + this.state.board.columns);
 		}else{
 			arr.push(cell-1);
 		}
 
 		arr.forEach((item)=>{
 			neighbors.push(item);
-			neighbors.push(item-this.state.columns);
-			neighbors.push(item+this.state.columns);
+			neighbors.push(item-this.state.board.columns);
+			neighbors.push(item+this.state.board.columns);
 		});
 		
 		neighbors = neighbors.map((item)=>{
@@ -89,8 +100,10 @@ export default class Board extends React.Component{
 		});
 
 		/*console.log(neighbors);*/
+
 		neighbors.shift();
 		return neighbors;
+
 	}
 
 	conwayRules(){
@@ -131,7 +144,7 @@ export default class Board extends React.Component{
 		currentGeneration++;
 		this.setState({
 			cells: cellsNew,
-			game: {currentGeneration}
+			game: Object.assign({}, this.state.game, {currentGeneration})
 		});
 	}
 
@@ -141,10 +154,15 @@ export default class Board extends React.Component{
 	}
 
 	startSim(){
+		console.log(this.state.game);
+		let speed = this.state.game.speed;
+		console.log(speed);
+		console.log("*******")
 		if(!this.state.game.isRunning){
-			let intervalId = setInterval(this.conwayRules.bind(this), 200);
+			let intervalId = setInterval(this.conwayRules.bind(this), speed);
 			this.setState({intervalId, game: Object.assign({}, this.state.game, {isRunning: true})});
 		}
+
 	}
 
 	stopSim(){
@@ -162,14 +180,19 @@ export default class Board extends React.Component{
 			/*return cell;*/
 		});
 		
-		this.setState({cells, game: {isRunning: false, currentGeneration: 0}});		
+		this.setState({cells, game: Object.assign({}, this.state.game, {isRunning: false, currentGeneration: 0})});		
 	}
 
 	render(){
+		let boardDimensions = {
+			width: this.state.board.columns * 12,
+			height: this.state.board.rows * 12
+		};
 		return(
 			<div>
-				<GameControls startsim={()=>this.startSim()} stopsim={()=>this.stopSim()} nextgen={()=>this.conwayRules()} clearSim={()=>this.clearSim()} />
-				<div id="cellcontainer">
+				<GameControls startsim={()=>this.startSim()} stopsim={()=>this.stopSim()} nextgen={()=>this.conwayRules()} clearSim={()=>this.clearSim()} setSpeed={this.setGameSpeed.bind(this)} />
+				<div id="generationCounter">{this.state.game.currentGeneration}</div>
+				<div id="cellcontainer" style={boardDimensions}>
 					{this.state.cells.map((cell,i)=>{
 						/*let cellClass = cell.isAlive ? "cell alive" : "cell dead";*/
 						let cellClass = "";
@@ -180,14 +203,10 @@ export default class Board extends React.Component{
 						}else{
 							cellClass = "cell dead";
 						}
-
-
-
-
 						return <div data-cell-id={i+1} className={cellClass} onClick={(e)=>this.cellLifeHandler(e)} key={i+1}></div>;
 					})}
 				</div>
-				{this.state.game.currentGeneration}
+				
 			</div>
 			);
 	}
