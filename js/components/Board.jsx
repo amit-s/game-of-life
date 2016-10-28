@@ -12,8 +12,8 @@ export default class Board extends React.Component{
 			columns: 40,
 			height: 0,
 			width: 0,			
-			isRunning: false,			
 			game: {
+				isRunning: false,
 				currentGeneration: 0
 			}
 		}
@@ -141,15 +141,15 @@ export default class Board extends React.Component{
 	}
 
 	startSim(){
-		if(!this.state.isRunning){
+		if(!this.state.game.isRunning){
 			let intervalId = setInterval(this.conwayRules.bind(this), 200);
-			this.setState({intervalId, isRunning: true});
+			this.setState({intervalId, game: Object.assign({}, this.state.game, {isRunning: true})});
 		}
 	}
 
 	stopSim(){
 		clearInterval(this.state.intervalId);
-		this.setState({isRunning: false});
+		this.setState({game: Object.assign({}, this.state.game, {isRunning: false})});
 	}
 
 	clearSim(){
@@ -162,7 +162,7 @@ export default class Board extends React.Component{
 			/*return cell;*/
 		});
 		
-		this.setState({cells, isRunning: false, game: {currentGeneration: 0}});		
+		this.setState({cells, game: {isRunning: false, currentGeneration: 0}});		
 	}
 
 	render(){
