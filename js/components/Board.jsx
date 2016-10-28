@@ -13,7 +13,9 @@ export default class Board extends React.Component{
 			height: 0,
 			width: 0,			
 			isRunning: false,			
-			currentGeneration: 0			
+			game: {
+				currentGeneration: 0
+			}
 		}
 	}
 
@@ -94,7 +96,7 @@ export default class Board extends React.Component{
 	conwayRules(){
 		let cellsNew = this.state.cells.map((cell)=>Object.assign({},cell));
 		let cellsState = this.state.cells;
-		let currentGeneration = this.state.currentGeneration;
+		let currentGeneration = this.state.game.currentGeneration;
 		let countAliveTotal = 0;
 
 		cellsNew.forEach((cell,index)=>{
@@ -129,7 +131,7 @@ export default class Board extends React.Component{
 		currentGeneration++;
 		this.setState({
 			cells: cellsNew,
-			currentGeneration
+			game: {currentGeneration}
 		});
 	}
 
@@ -160,7 +162,7 @@ export default class Board extends React.Component{
 			/*return cell;*/
 		});
 		
-		this.setState({cells, isRunning: false, currentGeneration: 0});		
+		this.setState({cells, isRunning: false, game: {currentGeneration: 0}});		
 	}
 
 	render(){
@@ -185,7 +187,7 @@ export default class Board extends React.Component{
 						return <div data-cell-id={i+1} className={cellClass} onClick={(e)=>this.cellLifeHandler(e)} key={i+1}></div>;
 					})}
 				</div>
-				{this.state.currentGeneration}
+				{this.state.game.currentGeneration}
 			</div>
 			);
 	}
