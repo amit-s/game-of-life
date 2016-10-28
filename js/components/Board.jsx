@@ -1,4 +1,5 @@
 import React from 'react';
+import GameControls from './GameControls.jsx';
 
 export default class Board extends React.Component{
 	constructor(props){
@@ -6,11 +7,14 @@ export default class Board extends React.Component{
 		let initialCells = this.createCells(1000);
 
 		this.state = {
-			cells: initialCells,
+			cells: initialCells,			
 			rows: 25,
 			columns: 40,
-			currentGeneration: 0
-		};
+			height: 0,
+			width: 0,			
+			isRunning: false,			
+			currentGeneration: 0			
+		}
 	}
 
 	createCells(count){
@@ -35,8 +39,16 @@ export default class Board extends React.Component{
 		/*console.log(this.findNeighbors(e.target.dataset.cellId-1));*/
 		/*this.findNeighbors(e.target.dataset.cellId-1)*/
 		let cells = this.state.cells.map((cell)=>Object.assign({},cell))
-		cells[cellId].isBorn =  !cells[cellId].isBorn;
-		cells[cellId].isAlive =  !cells[cellId].isAlive;
+		let clickedCell = cells[e.target.dataset.cellId-1];
+		/*cells[cellId].isBorn =  !cells[cellId].isBorn;
+		cells[cellId].isAlive =  !cells[cellId].isAlive;*/
+		if(clickedCell.isAlive){
+			clickedCell.isAlive = !clickedCell.isAlive;
+			clickedCell.isBorn = false;
+		}else{
+			clickedCell.isBorn = !clickedCell.isBorn;
+			clickedCell.isAlive = !clickedCell.isAlive;
+		}
 		this.setState({cells});
 	}
 
@@ -109,32 +121,52 @@ export default class Board extends React.Component{
 			}
 			countAliveTotal+=countAlive;
 		});
+
 		if(countAliveTotal === 0){
 			clearInterval(this.state.intervalId);
 			return;
 		}
 		currentGeneration++;
-		this.setState({cells: cellsNew, currentGeneration});
+		this.setState({
+			cells: cellsNew,
+			currentGeneration
+		});
 	}
 
 	componentDidMount(){
-		/*this.conwayRules();*/
-		/*let intervalId = setInterval(this.conwayRules.bind(this), 200);
-		this.setState({intervalId});*/
 		this.startSim();
 
 	}
 
 	startSim(){
-		let intervalId = setInterval(this.conwayRules.bind(this), 200);
-		this.setState({intervalId});		
+		if(!this.state.isRunning){
+			let intervalId = setInterval(this.conwayRules.bind(this), 200);
+			this.setState({intervalId, isRunning: true});
+		}
 	}
 
+	stopSim(){
+		clearInterval(this.state.intervalId);
+		this.setState({isRunning: false});
+	}
 
+	clearSim(){
+
+		let cells = this.state.cells.map((cell)=>Object.assign({},cell));
+		
+		cells.forEach((cell)=>{
+			cell.isAlive = false;
+			cell.isBorn = false;
+			/*return cell;*/
+		});
+		
+		this.setState({cells, isRunning: false, currentGeneration: 0});		
+	}
 
 	render(){
 		return(
 			<div>
+				<GameControls startsim={()=>this.startSim()} stopsim={()=>this.stopSim()} nextgen={()=>this.conwayRules()} clearSim={()=>this.clearSim()} />
 				<div id="cellcontainer">
 					{this.state.cells.map((cell,i)=>{
 						/*let cellClass = cell.isAlive ? "cell alive" : "cell dead";*/
@@ -148,13 +180,12 @@ export default class Board extends React.Component{
 						}
 
 
+
+
 						return <div data-cell-id={i+1} className={cellClass} onClick={(e)=>this.cellLifeHandler(e)} key={i+1}></div>;
 					})}
 				</div>
-				<button onClick={()=>this.conwayRules()}>Next Generation</button>{this.state.currentGeneration}
-				<button onClick={()=>this.startSim()} >Start</button>
-				<button onClick={()=>{clearInterval(this.state.intervalId)}} >Stop</button>
-
+				{this.state.currentGeneration}
 			</div>
 			);
 	}

@@ -1,8 +1,3 @@
-#board {
-  height: 300px;
-  width: 480px;
-  border: 1px solid black; }
-
 .cell {
   background: rgba(0, 0, 0, 0.3);
   width: 10px;
@@ -12,7 +7,10 @@
 
 #cellcontainer {
   display: flex;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  height: 300px;
+  width: 480px;
+  border: 1px solid black; }
 
 .alive {
   background: red; }
