@@ -1,18 +1,16 @@
 import React from 'react';
 import GameControls from './GameControls.jsx';
+import BoardDimensionControls from './BoardDimensionControls.jsx';
 
 export default class Board extends React.Component{
 	constructor(props){
 		super(props);
-		let initialCells = this.createCells(1000);
+		/*let initialCells = this.createCells(1000);*/
 
-		this.state = {
-			cells: initialCells,
+		this.state = {			
 			board: {			
-				rows: 25,
-				columns: 40,
-				height: 0,
-				width: 0
+				columns: 50,
+				rows: 30
 			},
 			game: {
 				isRunning: false,
@@ -22,8 +20,15 @@ export default class Board extends React.Component{
 		}
 	}
 
-	createCells(count){
+	componentWillMount(){
+		/*let cells = this.createCells(this.state.board.columns*this.state.board.rows);
+		this.setState({cells});*/
+		this.createCells();
+	}
+
+	createCells(){
 		let cells=[];
+		let count = this.state.board.columns * this.state.board.rows;
 		for(let i=0; i<count; i++){
 			cells.push({
 				number: i,
@@ -32,11 +37,11 @@ export default class Board extends React.Component{
 			});
 		}
 
-		for(var i=0; i<400; i++){
-			var x = Math.floor(Math.random()*999 + 1);
+		for(var i=0; i<(count/2); i++){
+			var x = Math.floor(Math.random()*count);
 			cells[x].isAlive = true;
 		}
-		return cells;
+		this.setState({cells});
 	}
 
 	cellLifeHandler(e){
@@ -63,6 +68,20 @@ export default class Board extends React.Component{
 		this.setState({game: Object.assign({}, this.state.game, {speed, isRunning: false})}, function(){			
 			this.startSim();			
 		});		
+	}
+
+	setBoardDimensions(dimObj){
+		
+		let board = {
+			rows: Number(dimObj.rows),
+			columns: Number(dimObj.columns)
+		}
+		clearInterval(this.state.intervalId);
+		this.setState({board, game: Object.assign({}, this.state.game, {isRunning: false, currentGeneration: 0})}, function(){
+			this.createCells();
+			this.startSim();
+		});
+
 	}
 
 	findNeighbors(index){
@@ -107,6 +126,7 @@ export default class Board extends React.Component{
 	}
 
 	conwayRules(){
+		
 		let cellsNew = this.state.cells.map((cell)=>Object.assign({},cell));
 		let cellsState = this.state.cells;
 		let currentGeneration = this.state.game.currentGeneration;
@@ -146,15 +166,15 @@ export default class Board extends React.Component{
 			cells: cellsNew,
 			game: Object.assign({}, this.state.game, {currentGeneration})
 		});
+
 	}
 
 	componentDidMount(){
 		this.startSim();
-
 	}
 
 	startSim(){
-		console.log(this.state.game);
+		/*console.log(this.state.game);*/
 		let speed = this.state.game.speed;
 		console.log(speed);
 		console.log("*******")
@@ -180,19 +200,22 @@ export default class Board extends React.Component{
 			/*return cell;*/
 		});
 		
-		this.setState({cells, game: Object.assign({}, this.state.game, {isRunning: false, currentGeneration: 0})});		
+		this.setState({cells, game: Object.assign({}, this.state.game, {isRunning: false, currentGeneration: 0})});
+		console.log(this.state.intervalId);
 	}
 
 	render(){
-		let boardDimensions = {
+		let boardDimensionsStyle = {
 			width: this.state.board.columns * 12,
 			height: this.state.board.rows * 12
 		};
+		/*console.log(boardDimensions);*/
 		return(
 			<div>
 				<GameControls startsim={()=>this.startSim()} stopsim={()=>this.stopSim()} nextgen={()=>this.conwayRules()} clearSim={()=>this.clearSim()} setSpeed={this.setGameSpeed.bind(this)} />
+				<BoardDimensionControls setBoardDimensions={this.setBoardDimensions.bind(this)} />
 				<div id="generationCounter">{this.state.game.currentGeneration}</div>
-				<div id="cellcontainer" style={boardDimensions}>
+				<div id="cellcontainer" style={boardDimensionsStyle}>
 					{this.state.cells.map((cell,i)=>{
 						/*let cellClass = cell.isAlive ? "cell alive" : "cell dead";*/
 						let cellClass = "";

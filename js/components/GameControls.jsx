@@ -13,7 +13,7 @@ export default class GameControls extends React.Component{
 				<div id="speedControls">
 					<button data-speed={1000} onClick={(e)=>this.props.setSpeed(e.target.dataset.speed)}>Slow</button>
 					<button data-speed={500} onClick={(e)=>this.props.setSpeed(e.target.dataset.speed)}>Medium</button>
-					<button data-speed={100} onClick={(e)=>this.props.setSpeed(e.target.dataset.speed)}>Fast</button>
+					<button data-speed={150} onClick={(e)=>this.props.setSpeed(e.target.dataset.speed)}>Fast</button>
 				</div>
 			</div>
 			);
