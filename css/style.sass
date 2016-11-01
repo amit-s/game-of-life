@@ -1,10 +1,20 @@
 $background-color-live-cell: rgba(255,0,0,1)
 $background-color-born-cell: rgba(255,0,0,0.5)
 $background-color-dead-cell: rgba(0,0,0,0.3)
+$background-image: url("../images/subtle_white_mini_waves.png")
+$font: 'Titillium Web', sans-serif
 
-	
-bx
-	border: 1px solid black
+=flexboxpre
+	display: -webkit-box
+	display: -moz-box
+	display: -ms-flexbox
+	display: -webkit-flex
+	display: flex
+
+body
+	background: $background-image
+
+
 
 .cell
 	background: $background-color-dead-cell
@@ -13,12 +23,9 @@ bx
 	margin: 1px
 	font-size: 0.7em
 
-#cellcontainer
-	display: flex
-	flex-wrap: wrap
-	//height: 300px
-	//width: 480px
-//	border: 1px solid black
+#cellcontainer	
+	+flexboxpre
+	flex-wrap: wrap	
 
 .alive
 	background: $background-color-live-cell
@@ -33,7 +40,10 @@ bx
 	margin: auto
 
 #board
-	margin-bottom: 50px	
+	margin-bottom: 50px
+	font-family: $font
+
+	
 
 button
 	margin: 2px !important
@@ -44,4 +54,4 @@ button
 
 #generationCounter
 	margin: 10px
-	
+	font-size: 2em

@@ -1,5 +1,5 @@
-bx {
-  border: 1px solid black; }
+body {
+  background: url("../images/subtle_white_mini_waves.png"); }
 
 .cell {
   background: rgba(0, 0, 0, 0.3);
@@ -9,6 +9,10 @@ bx {
   font-size: 0.7em; }
 
 #cellcontainer {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
   flex-wrap: wrap; }
 
@@ -25,7 +29,8 @@ bx {
   margin: auto; }
 
 #board {
-  margin-bottom: 50px; }
+  margin-bottom: 50px;
+  font-family: "Titillium Web", sans-serif; }
 
 button {
   margin: 2px !important;
@@ -35,6 +40,7 @@ button {
   width: 100px; }
 
 #generationCounter {
-  margin: 10px; }
+  margin: 10px;
+  font-size: 2em; }
 
 /*# sourceMappingURL=style.css.map */

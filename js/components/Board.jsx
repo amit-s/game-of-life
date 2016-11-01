@@ -5,8 +5,7 @@ import BoardDimensionControls from './BoardDimensionControls.jsx';
 export default class Board extends React.Component{
 	constructor(props){
 		super(props);
-		/*let initialCells = this.createCells(1000);*/
-
+		
 		this.state = {			
 			board: {			
 				columns: 50,
@@ -20,9 +19,7 @@ export default class Board extends React.Component{
 		}
 	}
 
-	componentWillMount(){
-		/*let cells = this.createCells(this.state.board.columns*this.state.board.rows);
-		this.setState({cells});*/
+	componentWillMount(){		
 		this.createCells();
 	}
 
@@ -45,13 +42,10 @@ export default class Board extends React.Component{
 	}
 
 	cellLifeHandler(e){
-		let cellId = e.target.dataset.cellId-1;		
-		/*console.log(this.findNeighbors(e.target.dataset.cellId-1));*/
-		/*this.findNeighbors(e.target.dataset.cellId-1)*/
-		let cells = this.state.cells.map((cell)=>Object.assign({},cell))
+		let cellId = e.target.dataset.cellId-1;
+		let cells = this.state.cells.map((cell)=>Object.assign({},cell));
 		let clickedCell = cells[e.target.dataset.cellId-1];
-		/*cells[cellId].isBorn =  !cells[cellId].isBorn;
-		cells[cellId].isAlive =  !cells[cellId].isAlive;*/
+		
 		if(clickedCell.isAlive){
 			clickedCell.isAlive = !clickedCell.isAlive;
 			clickedCell.isBorn = false;
@@ -70,8 +64,7 @@ export default class Board extends React.Component{
 		});		
 	}
 
-	setBoardDimensions(dimObj){
-		
+	setBoardDimensions(dimObj){		
 		let board = {
 			rows: Number(dimObj.rows),
 			columns: Number(dimObj.columns)
@@ -81,7 +74,6 @@ export default class Board extends React.Component{
 			this.createCells();
 			this.startSim();
 		});
-
 	}
 
 	findNeighbors(index){
@@ -118,15 +110,11 @@ export default class Board extends React.Component{
 			}
 		});
 
-		/*console.log(neighbors);*/
-
 		neighbors.shift();
 		return neighbors;
-
 	}
 
-	conwayRules(){
-		
+	conwayRules(){		
 		let cellsNew = this.state.cells.map((cell)=>Object.assign({},cell));
 		let cellsState = this.state.cells;
 		let currentGeneration = this.state.game.currentGeneration;
@@ -173,23 +161,18 @@ export default class Board extends React.Component{
 		this.startSim();
 	}
 
-	startSim(){
-		/*console.log(this.state.game);*/
+	startSim(){		
 		let speed = this.state.game.speed;
 		
 		if(!this.state.game.isRunning){
 			let intervalId = setInterval(this.conwayRules.bind(this), speed);
-			this.setState({intervalId, game: Object.assign({}, this.state.game, {isRunning: true})});
-			
+			this.setState({intervalId, game: Object.assign({}, this.state.game, {isRunning: true})});			
 			
 			document.getElementById("startButton").className = "btn btn-danger";
 			document.getElementById("stopButton").className = "btn";
+			document.getElementById("nextgenButton").disabled = "true";
 			
 		}
-		
-		/*let x = document.getElementById("startButton");
-		console.log(x);*/
-
 	}
 
 	stopSim(){
@@ -207,26 +190,23 @@ export default class Board extends React.Component{
 			/*return cell;*/
 		});
 		
-		this.setState({cells, game: Object.assign({}, this.state.game, {isRunning: false, currentGeneration: 0})});
-		console.log(this.state.intervalId);
+		this.setState({cells, game: Object.assign({}, this.state.game, {isRunning: false, currentGeneration: 0})});		
 	}
 
 	render(){
 		let boardDimensionsStyle = {
 			width: this.state.board.columns * 12,
 			/*height: this.state.board.rows * 12*/
-		};
+		};		
 		
-		/*console.log(boardDimensions);*/
 		return(
-			<div style={boardDimensionsStyle} className="centerit bx">
-				<h1 className="bx text-center">Conway's Game of Life</h1>
+			<div style={boardDimensionsStyle} className="centerit">
+				<h1 className="text-center">Conway's Game of Life</h1>
 				<GameControls status={this.state.game.isRunning} startsim={()=>this.startSim()} stopsim={()=>this.stopSim()} nextgen={()=>this.conwayRules()} clearSim={()=>this.clearSim()} setSpeed={this.setGameSpeed.bind(this)} />
 				<BoardDimensionControls setBoardDimensions={this.setBoardDimensions.bind(this)} />
 				<div id="generationCounter" className="text-center">GENERATION : {this.state.game.currentGeneration}</div>
 				<div id="cellcontainer">
-					{this.state.cells.map((cell,i)=>{
-						/*let cellClass = cell.isAlive ? "cell alive" : "cell dead";*/
+					{this.state.cells.map((cell,i)=>{						
 						let cellClass = "";
 						if(cell.isBorn){
 							cellClass = "cell born";
