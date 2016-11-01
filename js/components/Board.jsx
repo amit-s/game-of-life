@@ -15,7 +15,7 @@ export default class Board extends React.Component{
 			game: {
 				isRunning: false,
 				currentGeneration: 0,
-				speed: 200
+				speed: 400
 			}
 		}
 	}
@@ -176,12 +176,19 @@ export default class Board extends React.Component{
 	startSim(){
 		/*console.log(this.state.game);*/
 		let speed = this.state.game.speed;
-		console.log(speed);
-		console.log("*******")
+		
 		if(!this.state.game.isRunning){
 			let intervalId = setInterval(this.conwayRules.bind(this), speed);
 			this.setState({intervalId, game: Object.assign({}, this.state.game, {isRunning: true})});
+			
+			
+			document.getElementById("startButton").className = "btn btn-danger";
+			document.getElementById("stopButton").className = "btn";
+			
 		}
+		
+		/*let x = document.getElementById("startButton");
+		console.log(x);*/
 
 	}
 
@@ -207,15 +214,17 @@ export default class Board extends React.Component{
 	render(){
 		let boardDimensionsStyle = {
 			width: this.state.board.columns * 12,
-			height: this.state.board.rows * 12
+			/*height: this.state.board.rows * 12*/
 		};
+		
 		/*console.log(boardDimensions);*/
 		return(
-			<div>
-				<GameControls startsim={()=>this.startSim()} stopsim={()=>this.stopSim()} nextgen={()=>this.conwayRules()} clearSim={()=>this.clearSim()} setSpeed={this.setGameSpeed.bind(this)} />
+			<div style={boardDimensionsStyle} className="centerit bx">
+				<h1 className="bx text-center">Conway's Game of Life</h1>
+				<GameControls status={this.state.game.isRunning} startsim={()=>this.startSim()} stopsim={()=>this.stopSim()} nextgen={()=>this.conwayRules()} clearSim={()=>this.clearSim()} setSpeed={this.setGameSpeed.bind(this)} />
 				<BoardDimensionControls setBoardDimensions={this.setBoardDimensions.bind(this)} />
-				<div id="generationCounter">{this.state.game.currentGeneration}</div>
-				<div id="cellcontainer" style={boardDimensionsStyle}>
+				<div id="generationCounter" className="text-center">GENERATION : {this.state.game.currentGeneration}</div>
+				<div id="cellcontainer">
 					{this.state.cells.map((cell,i)=>{
 						/*let cellClass = cell.isAlive ? "cell alive" : "cell dead";*/
 						let cellClass = "";

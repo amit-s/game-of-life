@@ -1,3 +1,6 @@
+bx {
+  border: 1px solid black; }
+
 .cell {
   background: rgba(0, 0, 0, 0.3);
   width: 10px;
@@ -17,5 +20,21 @@
 
 .born {
   background: rgba(255, 0, 0, 0.5); }
+
+.centerit {
+  margin: auto; }
+
+#board {
+  margin-bottom: 50px; }
+
+button {
+  margin: 2px !important;
+  border: 1px solid black !important; }
+
+.buttonWidth {
+  width: 100px; }
+
+#generationCounter {
+  margin: 10px; }
 
 /*# sourceMappingURL=style.css.map */
